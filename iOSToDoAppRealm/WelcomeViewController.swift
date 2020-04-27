@@ -123,7 +123,7 @@ class WelcomeViewController: UIViewController {
                 return;
             }
             print("Login succeeded!");
-            self!.navigationController!.pushViewController(ItemsViewController(), animated: true);
+            self?.view.window?.rootViewController = ItemsViewController()
         });
     }
 }
