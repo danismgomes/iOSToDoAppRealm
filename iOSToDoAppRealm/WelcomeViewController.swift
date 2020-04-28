@@ -123,7 +123,7 @@ class WelcomeViewController: UIViewController {
                 return;
             }
             print("Login succeeded!");
-            self?.view.window?.rootViewController = ItemsViewController()
+            self?.view.window?.rootViewController = UINavigationController(rootViewController: ItemsTableViewController(nibName: nil, bundle: nil))
         });
     }
 }

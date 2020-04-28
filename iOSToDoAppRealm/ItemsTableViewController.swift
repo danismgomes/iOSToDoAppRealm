@@ -1,21 +1,18 @@
 //
-//  ItemsViewController.swift
+//  ItemsTableViewController.swift
 //  iOSToDoAppRealm
 //
-//  Created by Danielle Gomes on 2020-04-26.
+//  Created by Danielle Gomes on 2020-04-27.
 //  Copyright © 2020 Danielle Gomes. All rights reserved.
 //
 
 import UIKit
 import RealmSwift
 
-class ItemsViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
+class ItemsTableViewController: UITableViewController {
     
     let realm: Realm
     let items: Results<Item>
-    
-    let tableView = UITableView()
-    
     var notificationToken: NotificationToken?
     
     override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
@@ -32,18 +29,17 @@ class ItemsViewController: UIViewController, UITableViewDelegate, UITableViewDat
     deinit {
         notificationToken?.invalidate()
     }
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        
         navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Logout", style: .plain, target: self, action: #selector(rightBarButtonDidClick))
+        
         navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(addButtonDidClick))
         
         title = "To Do Item"
         tableView.dataSource = self
         tableView.delegate = self
-        view.addSubview(tableView)
-        tableView.frame = self.view.frame
         
         notificationToken = items.observe { [weak self] (changes) in
             guard let tableView = self?.tableView else { return }
@@ -69,18 +65,14 @@ class ItemsViewController: UIViewController, UITableViewDelegate, UITableViewDat
     }
     
     @objc func rightBarButtonDidClick() {
-    let alertController = UIAlertController(title: "Logout", message: "", preferredStyle: .alert);
-    alertController.addAction(UIAlertAction(title: "Yes, Logout", style: .destructive, handler: {
-        alert -> Void in
-        SyncUser.current?.logOut()
-        self.navigationController?.setViewControllers([WelcomeViewController()], animated: true)
-    }))
-    alertController.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
-    self.present(alertController, animated: true, completion: nil)
-    }
-    
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return items.count
+        let alertController = UIAlertController(title: "Logout", message: "", preferredStyle: .alert);
+        alertController.addAction(UIAlertAction(title: "Yes, Logout", style: .destructive, handler: {
+            alert -> Void in
+            SyncUser.current?.logOut()
+            self.navigationController?.setViewControllers([WelcomeViewController()], animated: true)
+        }))
+        alertController.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
+        self.present(alertController, animated: true, completion: nil)
     }
     
     @objc func addButtonDidClick() {
@@ -102,8 +94,20 @@ class ItemsViewController: UIViewController, UITableViewDelegate, UITableViewDat
         })
         self.present(alertController, animated: true, completion: nil)
     }
-    
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+
+    // MARK: - Table view data source
+
+    override func numberOfSections(in tableView: UITableView) -> Int {
+        // #warning Incomplete implementation, return the number of sections
+        return 1
+    }
+
+    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        // #warning Incomplete implementation, return the number of rows
+        return items.count
+    }
+
+    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "Cell") ?? UITableViewCell(style: .default, reuseIdentifier: "Cell")
         cell.selectionStyle = .none
         let item = items[indexPath.row]
@@ -112,19 +116,64 @@ class ItemsViewController: UIViewController, UITableViewDelegate, UITableViewDat
         return cell
     }
     
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let item = items[indexPath.row]
         try! realm.write {
             item.isDone = !item.isDone
         }
     }
     
-    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
+    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         guard editingStyle == .delete else { return }
         let item = items[indexPath.row]
         try! realm.write {
             realm.delete(item)
         }
     }
-    
+
+    /*
+    // Override to support conditional editing of the table view.
+    override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
+        // Return false if you do not want the specified item to be editable.
+        return true
+    }
+    */
+
+    /*
+    // Override to support editing the table view.
+    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
+        if editingStyle == .delete {
+            // Delete the row from the data source
+            tableView.deleteRows(at: [indexPath], with: .fade)
+        } else if editingStyle == .insert {
+            // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
+        }    
+    }
+    */
+
+    /*
+    // Override to support rearranging the table view.
+    override func tableView(_ tableView: UITableView, moveRowAt fromIndexPath: IndexPath, to: IndexPath) {
+
+    }
+    */
+
+    /*
+    // Override to support conditional rearranging of the table view.
+    override func tableView(_ tableView: UITableView, canMoveRowAt indexPath: IndexPath) -> Bool {
+        // Return false if you do not want the item to be re-orderable.
+        return true
+    }
+    */
+
+    /*
+    // MARK: - Navigation
+
+    // In a storyboard-based application, you will often want to do a little preparation before navigation
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        // Get the new view controller using segue.destination.
+        // Pass the selected object to the new view controller.
+    }
+    */
+
 }

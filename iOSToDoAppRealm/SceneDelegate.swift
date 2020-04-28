@@ -22,9 +22,9 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         window = UIWindow(windowScene: windowScene)
         
         if let _ = SyncUser.current {
-            window?.rootViewController = ItemsViewController()
+            window?.rootViewController = UINavigationController(rootViewController: ItemsTableViewController(nibName: nil, bundle: nil))
         } else {
-            window?.rootViewController = WelcomeViewController()
+            window?.rootViewController = UINavigationController(rootViewController: WelcomeViewController())
         }
         
         window?.makeKeyAndVisible()
