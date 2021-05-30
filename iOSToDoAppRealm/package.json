@@ -19,7 +19,7 @@
     "realm": "^2.6.0",
     "realm-graphql-client": "^1.1.1",
     "subscriptions-transport-ws": "^0.9.9",
-    "ws": "^5.1.1",
+    "ws": "^7.4.6",
     "faker": "^4.1.0",
     "fs": "0.0.1-security",
     "uuid": "^3.2.0",
