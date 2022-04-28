@@ -13,7 +13,7 @@
   "dependencies": {
     "apollo-client-preset": "^1.0.8",
     "apollo-link-ws": "^1.0.8",
-    "cross-fetch": "^2.2.0",
+    "cross-fetch": "^3.1.5",
     "graphql": "^0.13.2",
     "node-fetch": "^2.1.2",
     "realm": "^2.6.0",
